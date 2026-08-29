@@ -22,13 +22,16 @@ jobs:
 
   gitleaks:
     runs-on: ubuntu-latest
+    container:
+      image: zricethezav/gitleaks@sha256:b109bc5f8f76a38196a3e413704fc5b9e3c32360bce4e4b603bd6f45b3721dbb # v8.30.1 linux/amd64
     steps:
       - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5.0.0
-      - uses: gitleaks/gitleaks-action@ff98106e4c7b2bc287b24eaf42907196329070c7 # v2.3.9
+      - run: gitleaks detect --redact --source .
 
   actionlint:
     runs-on: ubuntu-latest
     container:
       image: rhysd/actionlint@sha256:2ef3ed94025747bd876118bfcae405d13532a07904d5ee0d70948110ef32f71d # v1.7.10 linux/amd64
     steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5.0.0
       - run: actionlint -color
