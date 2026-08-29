@@ -1,0 +1,57 @@
+name: Bug report
+description: Report a reproducible non-security problem
+title: "bug: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Do not include credentials or sensitive infrastructure details. [Report vulnerabilities privately](https://github.com/dermonaco-labs/.github/security/advisories/new).
+  - type: input
+    id: repository
+    attributes:
+      label: Affected component
+    validations:
+      required: true
+  - type: textarea
+    id: observed
+    attributes:
+      label: Observed behavior
+      description: Include concise, redacted evidence.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Reproduction steps
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Version or commit
+      description: Provide a release, image digest, or commit identifier when known.
+  - type: textarea
+    id: impact
+    attributes:
+      label: Impact
+      description: Explain who or what is affected.
+  - type: textarea
+    id: environment
+    attributes:
+      label: Sanitized environment context
+      description: Exclude addresses, identifiers, credentials, and private infrastructure details.
+  - type: textarea
+    id: logs
+    attributes:
+      label: Redacted logs
+      description: Include only the minimum relevant output after removing sensitive values.
+  - type: textarea
+    id: validation
+    attributes:
+      label: Checks already performed
