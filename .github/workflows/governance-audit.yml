@@ -1,0 +1,43 @@
+name: Organization governance audit
+
+on:
+  workflow_call:
+
+permissions:
+  contents: read
+
+jobs:
+  report:
+    name: Report governance posture
+    runs-on: ubuntu-latest
+    steps:
+      - name: Read repository governance settings
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          repository="${GITHUB_REPOSITORY}"
+          settings="$(gh api "repos/${repository}")"
+          default_branch="$(jq -r '.default_branch' <<<"${settings}")"
+          rulesets="$(gh api "repos/${repository}/rulesets")"
+
+          if protection="$(gh api "repos/${repository}/branches/${default_branch}/protection" 2>/dev/null)"; then
+            protection_state="protected"
+          else
+            protection_state="unprotected"
+          fi
+
+          {
+            echo "## Governance audit"
+            echo
+            echo "- Repository: \`${repository}\`"
+            echo "- Default branch: \`${default_branch}\`"
+            echo "- Branch protection: \`${protection_state}\`"
+            echo "- Repository rulesets: \`$(jq 'length' <<<"${rulesets}")\`"
+            echo "- Squash merge enabled: \`$(jq -r '.allow_squash_merge' <<<"${settings}")\`"
+            echo "- Merge commits enabled: \`$(jq -r '.allow_merge_commit' <<<"${settings}")\`"
+            echo "- Rebase merge enabled: \`$(jq -r '.allow_rebase_merge' <<<"${settings}")\`"
+            echo "- Delete merged branches: \`$(jq -r '.delete_branch_on_merge' <<<"${settings}")\`"
+            echo
+            echo "Report-only: this workflow does not enforce or modify repository policy."
+          } >> "$GITHUB_STEP_SUMMARY"
